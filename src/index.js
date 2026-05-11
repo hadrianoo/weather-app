@@ -9,16 +9,17 @@ const weatherForLocation = async (cityName) => {
 };
 
 // weatherForLocation("Warsaw");
-
 const form = document.querySelector("form");
 const input = document.querySelector("input");
 const tbody = document.querySelector("tbody");
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+  loader(true);
+
   const data = await weatherForLocation(input.value);
-  console.log(data);
   drawTableBody(data);
+  loader(false);
 });
 
 function drawTableBody(data) {
@@ -56,5 +57,14 @@ function drawTableBody(data) {
     tr.appendChild(valueTable);
     tr.appendChild(unitTable);
     tbody.appendChild(tr);
+  }
+}
+
+function loader(status) {
+  const spinner = document.querySelector(".loader");
+  if (status) {
+    spinner.classList.add("active");
+  } else {
+    spinner.classList.remove("active");
   }
 }
