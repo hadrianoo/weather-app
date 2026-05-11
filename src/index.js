@@ -8,63 +8,62 @@ const weatherForLocation = async (cityName) => {
   return await processWeatherData(weather);
 };
 
-// weatherForLocation("Warsaw");
 const form = document.querySelector("form");
 const input = document.querySelector("input");
 const tbody = document.querySelector("tbody");
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  loader(true);
-
-  const data = await weatherForLocation(input.value);
-  drawTableBody(data);
-  loader(false);
+  try {
+    loader(true);
+    const data = await weatherForLocation(input.value);
+    drawTableBody(data);
+  } catch (error) {
+    loader(false, "Wrong Input");
+    throw new Error("Wrong input", { cause: error });
+  }
+  loader(false, "Done!");
 });
+
+const namesToValues = [
+  { name: "Temperature", value: "temperature" },
+  { name: "Humidity", value: "humidity" },
+  { name: "Pressure", value: "pressure" },
+  { name: "Claud Cover", value: "cloudCover" },
+  { name: "Wind Speed", value: "windSpeed" },
+];
 
 function drawTableBody(data) {
   tbody.innerHTML = "";
 
   const cityName = document.querySelector("#cityName");
   cityName.textContent = input.value;
-  const names = [
-    "Temperature",
-    "Humidity",
-    "Pressure",
-    "Claud Cover",
-    "Wind Speed",
-  ];
-  const namesToValues = {
-    Temperature: "temperature",
-    Humidity: "humidity",
-    Pressure: "pressure",
-    "Claud Cover": "cloudCover",
-    "Wind Speed": "windSpeed",
-  };
-  for (const name of names) {
+
+  for (const item of namesToValues) {
     const tr = document.createElement("tr");
-    const nameTable = document.createElement("th");
-    const valueTable = document.createElement("td");
-    const unitTable = document.createElement("td");
+    const nameCell = document.createElement("th");
+    const valueCell = document.createElement("td");
+    const unitCell = document.createElement("td");
 
-    nameTable.scope = "row";
+    nameCell.scope = "row";
 
-    nameTable.textContent = name;
-    valueTable.textContent = data.values[namesToValues[name]];
-    unitTable.textContent = data.units[namesToValues[name]];
+    nameCell.textContent = item.name;
+    valueCell.textContent = data.values[item.value];
+    unitCell.textContent = data.units[item.value];
 
-    tr.appendChild(nameTable);
-    tr.appendChild(valueTable);
-    tr.appendChild(unitTable);
+    tr.appendChild(nameCell);
+    tr.appendChild(valueCell);
+    tr.appendChild(unitCell);
     tbody.appendChild(tr);
   }
 }
 
-function loader(status) {
+function loader(status, message = "") {
   const spinner = document.querySelector(".loader");
   if (status) {
     spinner.classList.add("active");
   } else {
     spinner.classList.remove("active");
+    spinner.textContent = message;
   }
 }

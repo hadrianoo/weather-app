@@ -9,8 +9,8 @@ const geocodingAPI = async (cityName) => {
       latitude: data.results[0].latitude,
       longitude: data.results[0].longitude,
     };
-  } catch (error) {
-    throw new Error("geocodingAPI", error);
+  } catch {
+    throw new Error();
   }
 };
 
@@ -22,8 +22,8 @@ const weatherAPI = async (latitude, longitude) => {
     if (!response.ok) throw new Error("weatherAPI", response.status);
     const data = await response.json();
     return data;
-  } catch (error) {
-    throw new Error("weatherAPI", error);
+  } catch {
+    throw new Error();
   }
 };
 
