@@ -5,5 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
   </head>
-  <body></body>
+  <body>
+    <table>
+      <caption>
+        Weather in
+        <span id="cityName"></span>
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Value</th>
+          <th scope="col">Units</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <form action="">
+      <label for="localization"
+        >Search localization
+        <input type="text" name="localization" id="localization" required />
+      </label>
+      <button type="submit">Search</button>
+    </form>
+  </body>
 </html>

@@ -1,13 +1,60 @@
 import "./styles.css";
 import { geocodingAPI, weatherAPI } from "./open-meteo-api.js";
-import { processWeatherJSON } from "./process-data.js";
+import { processWeatherData } from "./process-data.js";
 
 const weatherForLocation = async (cityName) => {
   const location = await geocodingAPI(cityName);
-  console.log(location);
   const weather = await weatherAPI(location.latitude, location.longitude);
-  const processedData = await processWeatherJSON(weather);
-  console.log(processedData);
+  return await processWeatherData(weather);
 };
 
-weatherForLocation("Warsaw");
+// weatherForLocation("Warsaw");
+
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const tbody = document.querySelector("tbody");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const data = await weatherForLocation(input.value);
+  console.log(data);
+  drawTableBody(data);
+});
+
+function drawTableBody(data) {
+  tbody.innerHTML = "";
+
+  const cityName = document.querySelector("#cityName");
+  cityName.textContent = input.value;
+  const names = [
+    "Temperature",
+    "Humidity",
+    "Pressure",
+    "Claud Cover",
+    "Wind Speed",
+  ];
+  const namesToValues = {
+    Temperature: "temperature",
+    Humidity: "humidity",
+    Pressure: "pressure",
+    "Claud Cover": "cloudCover",
+    "Wind Speed": "windSpeed",
+  };
+  for (const name of names) {
+    const tr = document.createElement("tr");
+    const nameTable = document.createElement("th");
+    const valueTable = document.createElement("td");
+    const unitTable = document.createElement("td");
+
+    nameTable.scope = "row";
+
+    nameTable.textContent = name;
+    valueTable.textContent = data.values[namesToValues[name]];
+    unitTable.textContent = data.units[namesToValues[name]];
+
+    tr.appendChild(nameTable);
+    tr.appendChild(valueTable);
+    tr.appendChild(unitTable);
+    tbody.appendChild(tr);
+  }
+}

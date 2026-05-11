@@ -1,12 +1,12 @@
-const processWeatherJSON = async (data) => {
+const processWeatherData = async (data) => {
   try {
     const processedData = {
       time: data.current.time,
       elevation: data.elevation,
-      weather: {
+      values: {
         cloudCover: data.current.cloud_cover,
         pressure: data.current.pressure_msl,
-        relativeHumidity: data.current.relative_humidity_2m,
+        humidity: data.current.relative_humidity_2m,
         temperature: data.current.temperature_2m,
         windSpeed: data.current.wind_speed_10m,
       },
@@ -24,4 +24,4 @@ const processWeatherJSON = async (data) => {
   }
 };
 
-export { processWeatherJSON };
+export { processWeatherData };
